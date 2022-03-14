@@ -40,6 +40,11 @@ router.put('/:id', (req, res) => {
     {
       id: req.body.id,
       category_name: req.body.category_name,
+    },
+    {
+      where: {
+        category_id: req.params.book_id,
+      },
     }
   )
 });
@@ -51,7 +56,7 @@ router.delete('/:id', (req, res) => {
       category_id: req.params.category_id,
     },
   })
-  .then ((deletedCategory) => {
+  .then((deletedCategory) => {
     res.json(deletedCategory);
   })
   .catch((err) => res.json(err));
