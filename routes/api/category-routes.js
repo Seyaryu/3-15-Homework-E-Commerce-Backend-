@@ -6,9 +6,18 @@ const { Category, Product } = require('../../models');
 router.get('/', (req, res) => {
   // find all categories
   // be sure to include its associated Products
-  Category.findAll().then((categories) => {
-    res.json(categories);
-  });
+  Category.findAll({
+    include: {
+      model: Product,
+      attributes: ['id', 'product_name', 'price', 'stock', 'category_id']
+    }
+  })
+  .then((categoryData) => {
+    res.json(categoryData);
+  })
+  .catch((err) => {
+    res.json(err);
+  })
 });
 
 router.get('/:id', (req, res) => {
@@ -18,35 +27,55 @@ router.get('/:id', (req, res) => {
     where: {
       id: req.params.id
     },
+    include: {
+      model: Product,
+      attributes: ['id', 'product_name', 'price', 'stock', 'category_id']
+    }
   })
   .then((categoryData) => {
+    if (!categoryData) {
+      res.status(404).json({message: 'No categories found'});
+      return;
+    }
+  })
+  .catch((categoryData) => {
     res.json(categoryData);
   }); 
 });
 
 router.post('/', (req, res) => {
   // create a new category
-  Category.bulkCreate([
+  Category.create([
     {
-      id: req.params.id,
       category_name: req.params.category_name,
     }
   ])
+  .then(categoryData => {
+    res.json(categoryData);
+  })
+  .catch((err) => {
+    console.log;
+  })
 });
 
 router.put('/:id', (req, res) => {
   // update a category by its `id` value
   Category.update(
-    {
-      id: req.body.id,
-      category_name: req.body.category_name,
-    },
+    req.body, 
     {
       where: {
-        category_id: req.params.book_id,
+        category_id: req.params.id,
       },
-    }
-  )
+    })
+    .then((categoryData) => {
+      if (!categoryData) {
+        res.status(404).json({message: 'No categories found with this id'});
+        return;
+      }
+    })
+    .catch((categoryData) => {
+      res.json(categoryData);
+    }); 
 });
 
 router.delete('/:id', (req, res) => {
@@ -56,10 +85,15 @@ router.delete('/:id', (req, res) => {
       category_id: req.params.category_id,
     },
   })
-  .then((deletedCategory) => {
-    res.json(deletedCategory);
+  .then((categoryData) => {
+    if (!categoryData) {
+      res.status(404).json({message: 'No categories found with this id'});
+      return;
+    }
   })
-  .catch((err) => res.json(err));
+  .catch((categoryData) => {
+    res.json(categoryData);
+  }); 
 });
 
 module.exports = router;
