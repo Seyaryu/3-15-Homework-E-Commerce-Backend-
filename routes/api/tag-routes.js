@@ -16,6 +16,7 @@ router.get('/', (req, res) => {
   })
   .catch((err) => {
     console.log(err);
+    res.status(500).json(err);
   })
 });
 
@@ -46,13 +47,14 @@ router.post('/', (req, res) => {
       tag_name: req.body.tag_name
     }
   ])
+  .then((tagData) => {
+    res.json(tagData)
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 })
-.then((tagData) => {
-  res.json(tagData)
-})
-.catch((err) => {
-  console.log(err);
-});
+
 
 router.put('/:id', (req, res) => {
   // update a tag's name by its `id` value
