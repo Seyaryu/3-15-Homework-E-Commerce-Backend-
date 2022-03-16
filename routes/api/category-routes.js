@@ -37,24 +37,25 @@ router.get('/:id', (req, res) => {
       res.status(404).json({message: 'No categories found'});
       return;
     }
-  })
-  .catch((categoryData) => {
     res.json(categoryData);
+  })
+  .catch((err) => {
+    res.json(err);
   }); 
 });
 
 router.post('/', (req, res) => {
   // create a new category
-  Category.create([
+  Category.create(
     {
-      category_name: req.params.category_name,
+      category_name: req.body.category_name,
     }
-  ])
+  )
   .then(categoryData => {
     res.json(categoryData);
   })
   .catch((err) => {
-    console.log;
+    res.json(err);
   })
 });
 
@@ -64,7 +65,7 @@ router.put('/:id', (req, res) => {
     req.body, 
     {
       where: {
-        category_id: req.params.id,
+        id: req.params.id,
       },
     })
     .then((categoryData) => {
@@ -72,9 +73,10 @@ router.put('/:id', (req, res) => {
         res.status(404).json({message: 'No categories found with this id'});
         return;
       }
-    })
-    .catch((categoryData) => {
       res.json(categoryData);
+    })
+    .catch((err) => {
+      res.json(err);
     }); 
 });
 
@@ -82,7 +84,7 @@ router.delete('/:id', (req, res) => {
   // delete a category by its `id` value
   Category.destroy({
     where: {
-      category_id: req.params.category_id,
+      id: req.params.id,
     },
   })
   .then((categoryData) => {
@@ -90,9 +92,10 @@ router.delete('/:id', (req, res) => {
       res.status(404).json({message: 'No categories found with this id'});
       return;
     }
-  })
-  .catch((categoryData) => {
     res.json(categoryData);
+  })
+  .catch((err) => {
+    res.json(err);
   }); 
 });
 
