@@ -5,6 +5,7 @@
 ![License Logo](https://img.shields.io/badge/license-MIT-green)
 This app uses mysql, sequelize, and other libraries from npm to create a database for a shop. 
 
+![picture of Insomniac](./pics/Capture.PNG)
 # Table of Contents
 
 - [Installation](#installation)
